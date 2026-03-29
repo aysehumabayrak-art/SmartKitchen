@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akıllı Mutfak</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Login Screen -->
+    <div id="login-section" class="screen active">
+        <div class="login-container">
+            <div class="logo-area">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C12 22 20 18 20 12C20 6 12 2 12 2C12 2 4 6 4 12C4 18 12 22 12 22Z" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <h1>Akıllı Mutfak</h1>
+            </div>
+            <p>Devam etmek için lütfen giriş bilgilerinizi girin.</p>
+            <form id="login-form">
+                <input type="password" id="password-input" placeholder="Şifrenizi girin" required>
+                <p id="error-message" class="error hidden">Hatalı şifre. Lütfen tekrar deneyin.</p>
+                <button type="submit" style="margin-bottom: 0.25rem;">Giriş Yap</button>
+                <button type="button" id="create-account-btn"
+                    style="background-color: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); margin-bottom: 0.25rem;">Hesap
+                    Oluştur</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Screen -->
+    <div id="register-section" class="screen hidden">
+        <div class="login-container">
+            <div class="logo-area">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C12 22 20 18 20 12C20 6 12 2 12 2C12 2 4 6 4 12C4 18 12 22 12 22Z" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="var(--primary-color)" />
+                </svg>
+                <h1>Kayıt Ol</h1>
+            </div>
+            <p>SmartKitchen'a katılmak için yetki alın.</p>
+            <form id="register-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                <input type="email" id="reg-email-input" placeholder="E-posta adresiniz" required autocomplete="off"
+                    style="padding: 1rem 1.25rem; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; outline: none; background-color: transparent; width:100%; box-sizing:border-box;">
+                <input type="password" id="reg-password-input" placeholder="Yeni şifreniz" required
+                    style="padding: 1rem 1.25rem; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; outline: none; background-color: transparent; width:100%; box-sizing:border-box;">
+                <div
+                    style="display:flex; align-items:center; justify-content:center; text-align:left; gap:0.5rem; margin: -0.5rem 0 0.5rem 0;">
+                    <input type="checkbox" id="reg-email-consent" required style="transform: scale(1.2);">
+                    <label for="reg-email-consent"
+                        style="font-size:0.85rem; color: var(--text-muted); cursor: pointer; user-select: none; line-height: 1.3;">E-posta
+                        adresime kampanya, duyuru ve yemek tarifleri gönderilmesine izin veriyorum.</label>
+                </div>
+                <button type="submit" style="margin-bottom: 0.25rem;">Kayıt Ol ve Tamamla</button>
+                <button type="button" id="back-to-login-btn"
+                    style="background-color: transparent; border: 2px solid var(--border-color); color: var(--text-muted);">Geri
+                    Dön</button>
+            </form>
+        </div>
+    </div>
+
+
+
+    <!-- Main Dashboard -->
+    <div id="main-section" class="screen hidden">
+        <header>
+            <div class="header-content">
+                <div class="header-logo">
+                    <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C12 22 20 18 20 12C20 6 12 2 12 2C12 2 4 6 4 12C4 18 12 22 12 22Z"
+                            fill="currentColor" />
+                    </svg>
+                    <h2>Akıllı Mutfak</h2>
+                </div>
+                <button id="logout-btn" class="logout-btn">Çıkış Yap</button>
+            </div>
+        </header>
+
+        <main class="dashboard">
+            <!-- Warning Section: Expiring Items -->
+            <section class="card warning-card hidden" id="expiring-section">
+                <h3 class="warning-title">
+                    <span class="icon">⚠️</span>
+                    DİKKAT: Bozulmak Üzere!
+                </h3>
+                <div class="card-content custom-content">
+                    <ul id="expiring-list" class="item-list warning-list">
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 1: Fridge/Pantry List -->
+            <section class="card pantry-card">
+                <h3>
+                    <span class="icon">🧊</span>
+                    Buzdolabı/Kiler Listesi
+                </h3>
+                <div class="card-content custom-content">
+
+
+                    <form id="add-item-form" class="add-item-form">
+                        <div class="form-row">
+                            <input type="text" id="item-name" placeholder="Malzeme Adı (örn: Süt)" required
+                                autocomplete="off" class="flex-2">
+                            <input type="number" id="item-quantity" placeholder="Miktar" step="0.1" min="0" required
+                                class="flex-1">
+                            <select id="item-unit" class="flex-1">
+                                <option value="Adet">Adet</option>
+                                <option value="kg">kg</option>
+                                <option value="Litre">Litre</option>
+                                <option value="Gram">Gram</option>
+                            </select>
+                        </div>
+                        <div class="form-row mt-2">
+                            <div class="date-input-wrapper">
+                                <label for="item-expiry">Son K. Tarihi:</label>
+                                <input type="date" id="item-expiry" title="Son Kullanma Tarihi" required>
+                            </div>
+                            <button type="submit" class="action-btn btn-add">Ekle</button>
+                        </div>
+                    </form>
+                    <ul id="pantry-list" class="item-list">
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 2: Shopping List -->
+            <section class="card">
+                <h3>
+                    <span class="icon">🛒</span>
+                    İhtiyaç Listesi
+                </h3>
+                <div class="card-content custom-content shopping-card">
+                    <ul id="shopping-list" class="item-list">
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <button id="clear-shopping-btn" class="action-btn outline">Listeyi Temizle</button>
+                </div>
+            </section>
+
+            <!-- Section 3: Recipe Suggestions -->
+            <section class="card recipe-main-card">
+                <h3>
+                    <span class="icon">🥘</span>
+                    Yemek Önerileri
+                </h3>
+                <div class="card-content custom-content recipe-content">
+                    <div class="search-recipe-area" style="margin-bottom: 1rem;">
+                        <form id="search-recipe-form" class="add-item-form">
+                            <div class="form-row">
+                                <input type="text" id="recipe-search-input" placeholder="Tarif Ara (örn: Pizza, Krep)"
+                                    class="flex-2" required autocomplete="off">
+                                <button type="submit" class="action-btn flex-1">Ara & Pişir</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="recipe-list" class="recipe-container">
+                        <p class="placeholder-text text-center">Eldeki malzemelere göre tarif bulmak için aşağıdaki
+                            butona basın veya bir tarif arayın.</p>
+                    </div>
+                </div>
+                <div class="card-footer full-width">
+                    <button id="suggest-btn" class="action-btn">Yemek Öner</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Firebase SDK (Compat versiyonu - Yerel dosyadan çalışması için) -->
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
